@@ -109,11 +109,11 @@ kubeadm init --config kubadm.conf
 
 ### network plugin install
 install flannel plugin as official doc describe
-notice 1.
-```
+
+notice 1  
 For flannel to work correctly, you must pass --pod-network-cidr=10.244.0.0/16 to kubeadm init.
-```
-notice 2.
+
+notice 2  
 add --iface={xxxx} if your network face is not eth0, if wont, you will fail 
 at time flannel plugin work
 
