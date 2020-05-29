@@ -1,7 +1,9 @@
-# production k8s install supplement
+= production k8s install supplement
+:email: 390271242@qq.com
+:docs: http://docs.gnoyuy.com/k8s/
 
-## Just Supplement doc
-this document just a supplement for [official documentation](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
+== Just Supplement doc
+this document just a supplement for https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/[official documentation]
 , if you are newer with k8s install you should go to official doc for look up more info .
 usually you can install by accord official doc step by step smoothly.
 
@@ -11,47 +13,46 @@ this doc may help for you at below scene:
 *  how install specify version of kubelet and kubeadm
 *  can't access network k8s.gcr.io for pull docker image and pull aliyun image is fast
 
-## yum repository problem
+== yum repository problem
 replace yum repository config by aliyun
-```
+[indent=0]
+----
 $ vim /etc/yum.repos.d/k8s.repo
-```
+----
+
 replace official google release with below
-```
+[indent=0]
+----
 [kubernetes]
 name=Kubernetes repo
 baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
 gpgcheck=0
 gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg
 enabled=1
-```
-
 ----
 then install kubeadm and kubelet will at just some minute
-```
+[indent=0]
+----
 $ yum install kubelet kubeadm -y
-```
-
-
-## install specify version of kubelet
+----
+== install specify version of kubelet
 if you want install specify version of kubernetes you should download from rpm package
 find the baseurl at aliyun yum release which in your yum repository config property name baseurl
 
-```
+[indent=0]
+----
 $ curl https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/Packages/230df4e2037cc1655d03586f837a4ecaf42fdbee7366ee2956e08ad1abd3ab8f-kubelet-1.16.10-0.x86_64.rpm -o kubelet-1.16.10.rpm
 $ rpm i kubelet-1.16.10.rpm
-```
+----
 this method also apply for kubeadm
 
 
-## gcr image problem
+== gcr image problem
 default kubeadm init images are k8s.gcr.io
 you could print default images use command like below
-```
+[indent=0]
+----
 $ kubeadm config images list
-```
-content list
-```
 k8s.gcr.io/kube-apiserver:v1.17.6
 k8s.gcr.io/kube-controller-manager:v1.17.6
 k8s.gcr.io/kube-scheduler:v1.17.6
@@ -59,39 +60,44 @@ k8s.gcr.io/kube-proxy:v1.17.6
 k8s.gcr.io/pause:3.1
 k8s.gcr.io/etcd:3.4.3-0
 k8s.gcr.io/coredns:1.6.5
-```
-you have 2 method to init by replace gcr images with aliyun images
-### retag image by pull aliyun image
-```
+----
+
+you have to method to init by replace gcr images with aliyun images
+=== retag image by pull aliyun image
+[indent=0]
+----
 $ docker image pull registry.aliyuncs.com/google_containers/kube-apiserver:v1.17.6
 $ docker tag registry.aliyuncs.com/google_containers/kube-apiserver:v1.17.6  k8s.gcr.io/kube-apiserver:v1.17.6
-```
+----
 retag all images then
-```
+[indent=0]
+----
 $ kubeadm init
-```
-
-### config imageRepository by aliyun when init
+----
+=== config imageRepository by aliyun when init
 you can modify config file or pass arg command line, here I choose config file way
-```
+[indent=0]
+----
 $ kubeadm config print init-defaults > kubeadm.conf
-```
-
+----
 edit this file replace
-```
+[indent=0]
+----
 imageRepository: k8s.gcr.io
-```
+----
 with
-```
+[indent=0]
+----
 imageRepository: registry.aliyuncs.com/google_containers
-```
+----
 
 and then
-```
+[indent=0]
+----
 $ kubeadm init --config kubadm.conf
-```
+----
 
-## network plugin with flannel
+== network plugin with flannel
 install flannel plugin as official doc described, but here i have two notice for you
 
 * notice 1  (official doc mention it also)
@@ -100,6 +106,6 @@ For flannel to work correctly, you must pass --pod-network-cidr=10.244.0.0/16 to
 pass arg --iface={xxxx} if your network face is not normal(eth[\d]+) name , if won't, you will found fail message
 when plugin working
 
-### License
+== License
 this doc is Open Source software released under the
-[Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html)
+https://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].
